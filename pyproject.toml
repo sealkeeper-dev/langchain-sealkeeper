@@ -1,0 +1,65 @@
+[project]
+name = "langchain-sealkeeper"
+dynamic = ["version"]
+description = "LangChain tools and gates that check a SealKeeper SEAL before an agent calls an agent or an MCP server."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "The SealKeeper Authors" }]
+requires-python = ">=3.10"
+dependencies = [
+  "sealkeeper>=0.1.0,<0.2",
+  "langchain-core>=1.7.3,<2",
+  "langchain>=1.4.7,<2",
+]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.14",
+  "Typing :: Typed",
+]
+
+[project.urls]
+Homepage = "https://sealkeeper.run"
+"SEAL Standard" = "https://sealkeeper.run/seal/standard"
+Repository = "https://github.com/sealkeeper-dev/langchain-sealkeeper"
+Issues = "https://github.com/sealkeeper-dev/langchain-sealkeeper/issues"
+
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "src/langchain_sealkeeper/_version.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/langchain_sealkeeper"]
+
+[tool.hatch.build.targets.sdist]
+only-include = ["src/langchain_sealkeeper", "tests", "README.md", "LICENSE"]
+
+[dependency-groups]
+# langchain-tests and langchain-mcp-adapters are for the tests only.
+dev = [
+  "pytest>=8.3",
+  "ruff>=0.14",
+  "langchain-tests>=1.1.9",
+  "langchain-mcp-adapters>=0.3.2",
+]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 88
+include = ["*.py"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["langchain_sealkeeper", "harness"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# Async tests run on anyio. pytest-asyncio comes with langchain-tests and
+# stays off.
+addopts = "--strict-markers -p no:asyncio"
